@@ -1,0 +1,40 @@
+name: Get GitHub Pages URL
+author: Tufts University
+description: get the GitHub Pages URL for a repository
+
+inputs:
+  repository:
+    description: |
+      Repository for which to get the GitHub Pages URL.
+      Must be in `owner/repo` format. Defaults to the current repository.
+    required: false
+    default: ${{ github.repository }}
+  token:
+    description: |
+      GitHub token with `read` permissions for the `pages` scope.
+      Defaults to the `GITHUB_TOKEN` secret.
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  url:
+    description: The GitHub Pages URL for the repository.
+    value: ${{ env.url }}
+
+runs:
+  using: composite
+  steps:
+    - id: attempt-api-request
+      run: |
+        url=$(gh api "repos/${{ inputs.repository }}/pages" --jq ".html_url")
+        echo "url=${url}" >> "$GITHUB_ENV"
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      continue-on-error: true
+    - id: construct-default-url
+      run: |
+        owner=$(echo "${{ inputs.repository }}" | cut -d "/" -f 1)
+        repo=$(echo "${{ inputs.repository }}" | cut -d "/" -f 2)
+        url="https://${owner}.github.io/${repo}/"
+        echo "url=${url}" >> "$GITHUB_ENV"
+      if: steps.attempt-api-request.outcome == "failure"
