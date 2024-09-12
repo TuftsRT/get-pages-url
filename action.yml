@@ -28,6 +28,7 @@ runs:
       run: |
         url=$(gh api "repos/${{ inputs.repository }}/pages" --jq ".html_url")
         echo "url=${url}" >> "$GITHUB_ENV"
+      shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
       continue-on-error: true
@@ -37,4 +38,5 @@ runs:
         repo=$(echo "${{ inputs.repository }}" | cut -d "/" -f 2)
         url="https://${owner}.github.io/${repo}/"
         echo "url=${url}" >> "$GITHUB_ENV"
+      shell: bash
       if: steps.attempt-api-request.outcome == "failure"
