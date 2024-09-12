@@ -39,4 +39,4 @@ runs:
         url="https://${owner}.github.io/${repo}/"
         echo "url=${url}" >> "$GITHUB_ENV"
       shell: bash
-      if: steps.attempt-api-request.outcome == "failure"
+      if: steps.attempt-api-request.outcome == 'failure'
