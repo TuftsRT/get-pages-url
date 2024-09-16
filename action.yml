@@ -19,7 +19,7 @@ inputs:
 outputs:
   url:
     description: The GitHub Pages URL for the repository.
-    value: ${{ env.url }}
+    value: ${{ steps.set-output.outputs.url }}
 
 runs:
   using: composite
@@ -27,7 +27,7 @@ runs:
     - id: attempt-api-request
       run: |
         url=$(gh api "repos/${{ inputs.repository }}/pages" --jq ".html_url")
-        echo "url=${url}" >> "$GITHUB_ENV"
+        echo "url=${url}" >> "$GITHUB_OUTPUT"
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
@@ -37,6 +37,17 @@ runs:
         owner=$(echo "${{ inputs.repository }}" | cut -d "/" -f 1)
         repo=$(echo "${{ inputs.repository }}" | cut -d "/" -f 2)
         url="https://${owner}.github.io/${repo}/"
-        echo "url=${url}" >> "$GITHUB_ENV"
+        echo "url=${url}" >> "$GITHUB_OUTPUT"
       shell: bash
       if: steps.attempt-api-request.outcome == 'failure'
+    - id: set-output
+      run: |
+        if [ -z "${API_OUT}" ]; then
+          echo "url=${BAK_OUT}" >> "$GITHUB_OUTPUT"
+        else
+          echo "url=${API_OUT}" >> "$GITHUB_OUTPUT"
+        fi
+      shell: bash
+      env:
+        API_OUT: ${{ steps.attempt-api-request.outputs.url }}
+        BAK_OUT: ${{ steps.construct-default-url.outputs.url }}
