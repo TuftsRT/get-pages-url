@@ -36,7 +36,11 @@ runs:
       run: |
         owner=$(echo "${{ inputs.repository }}" | cut -d "/" -f 1)
         repo=$(echo "${{ inputs.repository }}" | cut -d "/" -f 2)
-        url="https://${owner}.github.io/${repo}/"
+        if [ "${repo}" == "${owner}.github.io" ]; then
+          url="https://${repo}/"
+        else
+          url="https://${owner}.github.io/${repo}/"
+        fi
         echo "url=${url}" >> "$GITHUB_OUTPUT"
       shell: bash
       if: steps.attempt-api-request.outcome == 'failure'
