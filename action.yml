@@ -1,6 +1,9 @@
-name: Get GitHub Pages URL
+name: get-pages-url
 author: Tufts University
 description: get the GitHub Pages URL for a repository
+branding:
+  icon: link
+  color: blue
 
 inputs:
   repository:
