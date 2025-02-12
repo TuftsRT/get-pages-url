@@ -1,6 +1,6 @@
 # get-pages-url
 
-GitHub action to retrieve the GitHub Pages URL for a repository. This action attempts to fetch the URL using the GitHub API and falls back to constructing the URL based on repository naming conventions if the API request fails. Default behavior does not require any inputs to be specified and outputs the pages URL of the repository the action is run from. The action can be used to retrieve the pages URL of a different repository if an access token is provided.
+GitHub action to retrieve the GitHub Pages URL for a repository. This action attempts to fetch the URL using the GitHub API and falls back to constructing the URL based on repository naming conventions if the API request fails. Default behavior does not require any inputs and outputs the pages URL of the repository the action is run from. The action can be used to retrieve the pages URL of a different repository if an access token is provided.
 
 This is a _composite_ action and hence must be run on a Linux-based runner like `ubuntu-latest` or similar.
 
