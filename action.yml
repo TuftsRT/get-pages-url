@@ -36,6 +36,7 @@ runs:
         GH_TOKEN: ${{ inputs.token }}
       continue-on-error: true
     - id: construct-default-url
+      if: ${{ steps.attempt-api-request.outcome == 'failure' }}
       run: |
         owner=$(echo "${{ inputs.repository }}" | cut -d "/" -f 1)
         repo=$(echo "${{ inputs.repository }}" | cut -d "/" -f 2)
@@ -46,7 +47,6 @@ runs:
         fi
         echo "url=${url}" >> "$GITHUB_OUTPUT"
       shell: bash
-      if: ${{ failure() }}
     - id: set-output
       run: |
         if [ -z "${API_OUT}" ]; then
